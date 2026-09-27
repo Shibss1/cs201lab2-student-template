@@ -131,11 +131,15 @@ public class SinglyLinkedList<E extends Comparable<E>> {
             small += 1;
             big -= 1;
         }
-        valueIndexPair.sort(Comparator.comparingInt(p -> p.index));
+
+        Object[] result = new Object[size];
+        for (Pair p : valueIndexPair) {
+            result[p.index] = p.value;
+        }
 
         currentNode = this.head;
         for (int i = 0; i < size; i++) {
-            currentNode.element = valueIndexPair.get(i).value;
+            currentNode.element = (E) result[i];
             currentNode = currentNode.getNext();
         }
     }

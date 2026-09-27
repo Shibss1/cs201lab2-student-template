@@ -1,5 +1,4 @@
 import java.util.*;
-
 public class SinglyLinkedList<E extends Comparable<E>> {
     private Node<E> head = null;
     private Node<E> tail = null;
@@ -101,9 +100,44 @@ public class SinglyLinkedList<E extends Comparable<E>> {
 
     // write your codes here
     public void swap(){
-        
+        class Pair {
+            E value;
+            int index;
 
+            Pair(E value, int index) {
+                this.value = value;
+                this.index = index;
+            }
+        }
+
+        List<Pair> valueIndexPair = new ArrayList<>();
+        Node<E> currentNode = this.head;
+
+        for (int i = 0; i < size; i++) {
+            valueIndexPair.add(new Pair(currentNode.getElement(), i));
+            currentNode = currentNode.getNext();
+        }
+
+        valueIndexPair.sort(Comparator.comparing(p -> p.value));
+        
+        int small = 0;
+        int big = valueIndexPair.size() - 1;
+
+        for (int i = 0; i < valueIndexPair.size() / 2; i++) {
+            int tempBigIndex = valueIndexPair.get(big).index;
+            valueIndexPair.get(big).index = valueIndexPair.get(small).index;
+            valueIndexPair.get(small).index = tempBigIndex;
+
+            small += 1;
+            big -= 1;
+        }
+        valueIndexPair.sort(Comparator.comparingInt(p -> p.index));
+
+        currentNode = this.head;
+        for (int i = 0; i < size; i++) {
+            currentNode.element = valueIndexPair.get(i).value;
+            currentNode = currentNode.getNext();
+        }
     }
-   
 }
 

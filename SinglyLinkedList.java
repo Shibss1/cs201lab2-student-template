@@ -100,47 +100,29 @@ public class SinglyLinkedList<E extends Comparable<E>> {
 
     // write your codes here
     public void swap(){
-        class Pair {
-            E value;
-            int index;
+        List<Node<E>> nodes = new ArrayList<>();
 
-            Pair(E value, int index) {
-                this.value = value;
-                this.index = index;
-            }
-        }
-
-        List<Pair> valueIndexPair = new ArrayList<>();
         Node<E> currentNode = this.head;
-
+        // Each indiviual node added in here is still referencing the original SLL
         for (int i = 0; i < size; i++) {
-            valueIndexPair.add(new Pair(currentNode.getElement(), i));
+            nodes.add(currentNode);
             currentNode = currentNode.getNext();
         }
 
-        valueIndexPair.sort(Comparator.comparing(p -> p.value));
-        
-        int small = 0;
-        int big = valueIndexPair.size() - 1;
+        nodes.sort(Comparator.comparing(node -> node.getElement()));
 
-        for (int i = 0; i < valueIndexPair.size() / 2; i++) {
-            int tempBigIndex = valueIndexPair.get(big).index;
-            valueIndexPair.get(big).index = valueIndexPair.get(small).index;
-            valueIndexPair.get(small).index = tempBigIndex;
+        int smaller = 0;
+        int bigger = this.size - 1;
 
-            small += 1;
-            big -= 1;
-        }
+        // Modify the node directly, they are the same entity from the OG list despite being in an ArrayList
+        // The memory play tech bro
+        for (int i = 0; i < this.size / 2; i++) {
+            E tempValue = nodes.get(smaller).element;
+            nodes.get(smaller).element = nodes.get(bigger).element;
+            nodes.get(bigger).element = tempValue;
 
-        Object[] result = new Object[size];
-        for (Pair p : valueIndexPair) {
-            result[p.index] = p.value;
-        }
-
-        currentNode = this.head;
-        for (int i = 0; i < size; i++) {
-            currentNode.element = (E) result[i];
-            currentNode = currentNode.getNext();
+            smaller += 1;
+            bigger -= 1;
         }
     }
 }
